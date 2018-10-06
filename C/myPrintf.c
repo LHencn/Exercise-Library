@@ -29,6 +29,7 @@ int my_printf(const char *frm, ...) {
             case '%': {
                 i++;
                 switch(frm[i]) {
+                    
                     case 'd': {
                         int temp = va_arg(arg, int), x = 0;
                         int p1 = temp / 10, p2 = temp % 10;
@@ -39,7 +40,8 @@ int my_printf(const char *frm, ...) {
                         cnt += print_int(p1, 0);
                         cnt += print_int(p2, 1);
                     } break;
-                    default;
+
+                    default:
                         fprintf(stderr, "error : unknow %%%c\n", frm[i]);
                         exit(1);
                 }
@@ -51,7 +53,6 @@ int my_printf(const char *frm, ...) {
     }
     return cnt;
 }
-
 int main() {
     int n;
     
