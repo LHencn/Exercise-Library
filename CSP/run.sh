@@ -1,4 +1,4 @@
 #!/bin/bash
 
-g++ 201809-3.2.cpp
+g++ 201809-3.cpp
 ./a.out < input
