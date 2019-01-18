@@ -11,6 +11,7 @@ using std::cout;
 using std::endl;
 
 int main() {
+    /*
     try {
         throw 1;
     } catch(char c) {
@@ -24,5 +25,23 @@ int main() {
     } catch(...) {
         cout << "catch(...)" << endl;
     }
+    */
+
+    try {
+        try {
+            throw 'a'; //1
+        } catch(int i) {
+            cout << "catch(int i)" << i << endl;
+            throw i;
+        } catch(...) {
+            cout << "catch(...)" << endl;
+            throw;//2带着异常'a'
+        }
+    } catch(char c) {//捕获'a'
+        cout << "information is : " << c << endl;
+    } catch(...) {
+        cout << "other exception" << endl;
+    }
+    cout << "final" << endl;
     return 0;
 }
