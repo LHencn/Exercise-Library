@@ -45,11 +45,14 @@ int main() {
         for (int j = i; j > 0; j--) {
             if (a[j] < a[j - 1]) {
                 swap(a[j], a[j - 1]);
-                break;
+                if (a[j - 1] >= a[j - 2]) break;
             }
         }
     }
-    output(a, n, "insert_sort");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", a[i]);
+    }
+    //output(a, n, "insert_sort");
 
     return 0;
 }
