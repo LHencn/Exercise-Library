@@ -1,5 +1,5 @@
 /*************************************************************************
-	> File Name: weight_quick_union.c
+	> File Name: quick_union.c
 	> Author: LHC 
 	> Mail: 3115629644@qq.com 
 	> Created Time: 2019年01月20日 星期日 16时48分27秒
@@ -11,36 +11,28 @@
 
 typedef struct UnionSet {
     int *father; 
-    int *size;
-    int n;
+    int size;
 }UnionSet;
 
 UnionSet *init(int n) {
     UnionSet *u = (UnionSet *)calloc(sizeof(UnionSet), 1);
     u->father = (int *)malloc(sizeof(int) * n);
-    u->size = (int *)malloc(sizeof(int) * n);
     for (int i = 0; i < n; i++) {
         u->father[i] = i;
-        u->size[i] = 1;
     }
-    u->n = n;
+    u->size = n;
     return u;
 }
 
 int find(UnionSet *u, int x) {
-    if (u->father[x] != x) 
-        return (u->father[x] = find(u, u->father[x]));
+    if (u->father[x] != x) return find(u, u->father[x]);
     return x;
 }
 
 int merge(UnionSet *u, int a, int b){
     int fa = find(u, a), fb = find(u, b);
     if (fa == fb) return 0;
-    if (u->size[fa] < u->size[fb]) {
-        fa ^= fb ^= fa ^= fb;
-    }
-        u->father[fa] = fb;
-        u->size[fb] += u->size[fa];
+    u->father[fa] = fb;
     return 1;
 }
 
@@ -53,9 +45,9 @@ void clear(UnionSet *u) {
 }
 
 void output(UnionSet *u) {
-    for (int i = 0; i < u->n; i++) {
+    for (int i = 0; i < u->size; i++) {
         printf("(%d, %d)\t", i, u->father[i]);
-        if (i + 1 < u->n && i + 1 % 5 == 0) printf("\n");
+        if (i + 1 < u->size && i + 1 % 5 == 0) printf("\n");
     }
 }
 int main() {
@@ -71,14 +63,13 @@ int main() {
         switch (op) {
             case 0: {
                 printf("find %d <-> %d = %d\n", a, b, find(u, a) == find(u, b));
-                output(u);
                 break;
             }
             default: {
                 printf("union %d <-> %d = %d\n", a, b, merge(u, a, b));
-                output(u);
             }
         }
     }
+
     return 0;
 }
