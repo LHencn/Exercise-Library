@@ -2,9 +2,9 @@
 
 #### 1、认识递推问题：
 
-兔子繁殖问题：![兔子繁殖](/home/lhc/Github/Exercise-Library/NOIP/Picture/兔子繁殖.png)
+兔子繁殖问题：![兔子繁殖](./Picture/兔子繁殖.png)
 
-![兔子繁殖解答](/home/lhc/Github/Exercise-Library/NOIP/Picture/兔子繁殖解答.png)
+![兔子繁殖解答](./Picture/兔子繁殖解答.png)
 
 ![兔子繁殖1](/home/lhc/Github/Exercise-Library/NOIP/Picture/兔子繁殖1.png)
 
@@ -16,7 +16,7 @@
 
 ###### 2、记忆化优化：
 
-![](/home/lhc/Github/Exercise-Library/NOIP/Picture/兔子繁殖优化.png)
+![](./Picture/兔子繁殖优化.png)
 
 - 一次记忆：如上图所示，求一次f(6)时红色区域为重复计算的区域，可开辟出一个数组进行记忆，当需要使用时直接进行使用，无需再重复计算。
 - 整体记忆：多次求值时可以开辟一个全局数组，始终存储。
