@@ -6,7 +6,7 @@
 
 ![兔子繁殖解答](./Picture/兔子繁殖解答.png)
 
-![兔子繁殖1](/home/lhc/Github/Exercise-Library/NOIP/Picture/兔子繁殖1.png)
+![兔子繁殖1](./Picture/兔子繁殖1.png)
 
 ##### 兔子繁殖思路：
 
