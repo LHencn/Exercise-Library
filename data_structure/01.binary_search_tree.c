@@ -95,15 +95,18 @@ int main() {
             }
             case 1: {
                 printf("erase %d from BST\n", val);
+                root = erase(root, val);
                 break;
             }
             default : {
                 printf("insert %d to BST\n", val);
-                insert(root, val);
+                root = insert(root, val);
                 break;
             }
         }
-    }
     output(root);
+    printf("\n");
+    }
+    clear(root);
     return 0;
 }
