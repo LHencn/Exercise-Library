@@ -1,4 +1,4 @@
-###   						leetcode题解
+#   						leetcode题解
 
 #### 1、
 
@@ -50,15 +50,71 @@ int* twoSum(int* nums, int numsSize, int target) {
 
 ![](./picture/19-删除链表倒数第n个节点一次遍历.png)
 
+```c
+struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
+    struct ListNode ret;
+    ret.next = head;
+    struct ListNode *p = &ret, *q = p;
+    head = p;
+    int count = 0;
+    while (p) {
+        if (count++ > n) 
+            q = q->next;
+        p = p->next;
+    }
+    struct ListNode *temp = q->next;
+    q->next = q->next->next;
+    free(temp);
+    return head->next;
+}
+```
+
 #### 						24、交换链表中两两相邻的节点
 
 将该链表加一个虚拟节点，循环进行两两交换。
 
 ![](./picture/24.png)
 
+```c
+struct ListNode* swapPairs(struct ListNode* head) {
+    struct ListNode ret;
+    ret.next = head;
+    struct ListNode *p = &ret;
+    head = p;
+    struct ListNode *temp;
+    while (p->next  != NULL && p->next->next != NULL) {
+        temp = p->next->next;
+        p->next->next = temp->next;
+        temp->next = p->next;
+        p->next = temp;
+        p = p->next->next;
+    }
+    return head->next;
+}
+```
+
+
+
 #### 						83、删除链表中的重复项
 
 两个节点为一组循环，比较该两节点值，若相等，则删除后一个节点然后继续循环比较，不等则将指针后移，继续循环比较。
+
+```c
+struct ListNode* deleteDuplicates(struct ListNode* head) {
+    struct ListNode *p = head, *temp;
+    while (p && p->next) {
+        if (p->val == p->next->val) {
+            temp = p->next;
+            p->next = temp->next;
+            free(temp);
+        } else 
+            p = p->next;
+    }
+    return head;
+}
+```
+
+
 
 #### 						141、环型链表
 
@@ -89,6 +145,70 @@ int* twoSum(int* nums, int numsSize, int target) {
 
    2. 空间复杂度：O(1)O(1)， 我们只使用了慢指针和快指针两个结点，所以空间复杂度为 O(1)O(1)。
 
+```c
+ //采用快慢指针
+bool hasCycle(struct ListNode *head) {
+   if(head == NULL) return false;
+    struct ListNode *p = head, *q = head->next;
+    while (q && q->next) {
+        p = p->next;//慢指针
+        q = q->next->next;//快指针
+        if (p == q) return true;
+    }
+    return false;
+}
+//顺序表
+typedef struct Vector {
+    struct ListNode **data;
+    int size, length;
+}Vector;
+
+Vector *init(int n) {
+    Vector *p = (Vector *)malloc(sizeof(Vector));
+    p->size = n;
+    p->length = 0;
+    p->data = (struct ListNode **)malloc(sizeof(struct ListNode*) * p->size);
+    return p;
+}
+
+void expand(Vector *v) {
+    struct ListNode **temp = v->data;
+    v->size = 2 * v->size;
+    v->data = (struct ListNode **)malloc(sizeof(struct ListNode*) * v->size);
+    for (int i = 0; i < v->length; i++) {
+        v->data[i] = temp[i];
+    }
+    free(temp);
+}
+
+int insert(Vector *v, int loc, struct ListNode *value) {
+    if (loc < 0 || loc > v->length) 
+        return 0;
+    if (v->length == v->size) 
+        expand(v);
+    for (int i = v->length; i > loc; i--) {
+        v->data[i] = v->data[i - 1];
+    }
+    v->data[loc] = value;
+    v->length++;
+    return 1;
+}
+
+bool hasCycle(struct ListNode *head) {
+    struct ListNode *p = head;
+    Vector *v = init(10);
+    while (p) {
+        for (int i = 0; i < v->length; i++) {
+            if (p == v->data[i]) 
+                return true;
+        }
+        insert(v, 0, p);
+        p = p->next;
+    }
+    return false;
+}
+```
+
 
 
 #### 						160、寻找两链表相交节点
@@ -97,6 +217,20 @@ int* twoSum(int* nums, int numsSize, int target) {
 
 2. 采用两遍循环，循环每个节点，判断另一个链表中的节点是否有和其地址相同，时间复杂度O（n^2)
 
+   ```c
+   struct ListNode *getIntersectionNode(struct ListNode *headA, struct ListNode *headB) {
+       if(headA == NULL || headB == NULL) return NULL;
+       struct ListNode *pA = headA, *pB = headB;
+       while(pA != pB) {
+               pA = pA == NULL ? headB : pA->next;
+               pB = pB == NULL ? headA : pB->next;
+       }
+       return pA;
+   }
+   ```
+
+   
+
    #### 					202、寻找快乐数
 
 题目：一个“快乐数”定义为：对于一个正整数，每一次将该数替换为它每个位置上的数字的平方和，然后重复这个过程直到这个数变为 1，也可能是无限循环但始终变不到 1。如果可以变为 1，那么这个数就是快乐数。
@@ -104,6 +238,26 @@ int* twoSum(int* nums, int numsSize, int target) {
 解题：所有不快乐数的数位平方和计算，最後都会进入 4 → 16 → 37 → 58 → 89 → 145 → 42 → 20 → 4 的循环中。
 
 1.n出现重复值就一定是循环的，2.可以根据n值的特征，比如出现某个值就一定是循环的。
+
+```c
+bool isHappy(int n) {
+     int temp=0;
+        while(n!=1)
+        {
+            while(n>0)
+            {
+                temp+=(n%10)*(n%10);
+                n/=10;
+            }
+            n=temp;
+            temp=0;
+            if(n==4) return 0; 
+        }
+       return 1; 
+}
+```
+
+
 
 ![](./picture/202、快乐数.jpg)
 
@@ -120,6 +274,12 @@ int* twoSum(int* nums, int numsSize, int target) {
 
 解题：加一个虚拟节点，双指针遍历链表。
 
+```c
+
+```
+
+
+
 #### 						206、反转链表
 
 题目：反转一个单链表。
@@ -135,6 +295,24 @@ int* twoSum(int* nums, int numsSize, int target) {
 你可以迭代或递归地反转链表。你能否用两种方法解决这道题？
 
 题解：采用三个指针将链表中两两节点进行反转。
+
+```c
+struct ListNode* reverseList(struct ListNode* head) {
+    if (head == NULL || head->next == NULL) return ;
+    struct ListNode *p = head->next, *q = head, *temp;
+    q->next = NULL;
+    while (p->next) {
+        temp = p->next;
+        p->next = q;
+        q = p;
+        p = temp;
+    }
+    p->next = q;
+    return p;
+}
+```
+
+
 
 #### 						234、回文链表		
 
@@ -158,3 +336,241 @@ int* twoSum(int* nums, int numsSize, int target) {
 你能否用 O(n) 时间复杂度和 O(1) 空间复杂度解决此题？
 
 题解：
+
+1. 采用快慢指针找到链表中点
+2. 将链表中点next指针指向空，将链表反转
+3. 链表左右分别开始向中点遍历，判断是否相等
+
+```c
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+bool isPalindrome(struct ListNode* head) {
+    struct ListNode *fast = head, *slow = head, *temp = NULL;
+    while (fast) {//快慢指针找到链表中点
+        slow = slow->next;
+        fast = fast->next ? fast->next->next : fast->next;
+    }
+    while (slow) {//反转链表
+        fast = slow->next;
+        slow->next = temp;
+        temp = slow;
+        slow = fast;
+    }
+    fast = head;
+    slow = temp;
+    while (fast && slow) {//左右遍历
+        if (fast->val != slow->val)
+            return false;
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return true;
+}
+```
+
+
+
+
+
+#### 					237、删除链表中非末尾节点
+
+题目：请编写一个函数，使其可以删除某个链表中给定的（非末尾）节点，你将只被给定要求被删除的节点。
+
+现有一个链表 -- head = [4,5,1,9]，它可以表示为:
+
+![img](https://assets.leetcode-cn.com/aliyun-lc-upload/uploads/2019/01/19/237_example.png)
+
+ 
+
+**示例 1:**
+
+```
+输入: head = [4,5,1,9], node = 5
+输出: [4,1,9]
+解释: 给定你链表中值为 5 的第二个节点，那么在调用了你的函数之后，该链表应变为 4 -> 1 -> 9.
+```
+
+题解：因为我们无法访问我们想要删除的节点*之前*的节点，我们始终不能修改该节点的 `next` 指针。相反，我们必须将想要删除的节点的值替换为它后面节点中的值，然后删除它之后的节点。
+
+```c
+void deleteNode(struct ListNode* node) {//node->next节点给node节点赋值,然后删除node->next节点
+    node->val = node->next->val;
+    struct ListNode *p = node->next;
+    node->next = p->next;
+    free(p);
+}
+```
+
+## 栈和队列
+
+#### 20、有效的括号
+
+题目：给定一个只包括 `'('`，`')'`，`'{'`，`'}'`，`'['`，`']'` 的字符串，判断字符串是否有效。
+
+有效字符串需满足：
+
+1. 左括号必须用相同类型的右括号闭合。
+2. 左括号必须以正确的顺序闭合。
+
+注意空字符串可被认为是有效字符串。
+
+示例 1:
+
+```
+输入: "()"
+输出: true
+```
+
+示例 2:
+
+```
+输入: "()[]{}"
+输出: true
+```
+
+示例 3:
+
+```
+输入: "(]"
+输出: false
+```
+
+**题解：**
+
+1. 初始化栈 S。
+2. 一次处理表达式的每个括号。
+3. 如果遇到开括号，我们只需将其推到栈上即可。这意味着我们将稍后处理它，让我们简单地转到前面的 **子表达式**。
+4. 如果我们遇到一个闭括号，那么我们检查栈顶的元素。如果栈顶的元素是一个 `相同类型的` 左括号，那么我们将它从栈中弹出并继续处理。否则，这意味着表达式无效。
+5. 如果到最后我们剩下的栈中仍然有元素，那么这意味着表达式无效。
+
+复杂度：
+
+1. 时间复杂度：O(n)O(n)，因为我们一次只遍历给定的字符串中的一个字符并在栈上进行 O(1)O(1) 的推入和弹出操作。
+2. 空间复杂度：O(n)O(n)，当我们将所有的开括号都推到栈上时以及在最糟糕的情况下，我们最终要把所有括号推到栈上。例如 `((((((((((`。
+
+#### 232、用栈实现队列
+
+思路：采用两个栈实现逻辑上的队列
+
+s
+
+#### 225、用队列实现栈
+
+
+
+## 二叉树
+
+#### 100、相同的树
+
+给定两个二叉树，编写一个函数来检验它们是否相同。
+
+如果两个树在结构上相同，并且节点具有相同的值，则认为它们是相同的。
+
+**示例 1:**
+
+```
+输入:       1         1
+          / \       / \
+         2   3     2   3
+
+        [1,2,3],   [1,2,3]
+
+输出: true
+```
+
+题解：
+
+```c
+bool isSameTree(struct TreeNode* p, struct TreeNode* q) {
+    if (p == NULL && q == NULL) 
+        return true;
+    if (p && q && p->val == q->val)
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
+    return false;
+}
+```
+
+#### 101、对称二叉树
+
+给定一个二叉树，检查它是否是镜像对称的。
+
+例如，二叉树 `[1,2,2,3,4,4,3]` 是对称的。
+
+```
+    1
+   / \
+  2   2
+ / \ / \
+3  4 4  3
+```
+
+但是下面这个 `[1,2,2,null,3,null,3]` 则不是镜像对称的:
+
+```
+    1
+   / \
+  2   2
+   \   \
+   3    3
+```
+
+**说明:**
+
+如果你可以运用递归和迭代两种方法解决这个问题，会很加分。
+
+题解：
+
+**方法：递归**
+
+如果一个树的左子树与右子树镜像对称，那么这个树是对称的。
+
+![Push an element in stack](https://leetcode-cn.com/media/original_images/101_Symmetric.png)
+
+因此，该问题可以转化为：两个树在什么情况下互为镜像？
+
+如果同时满足下面的条件，两个树互为镜像：
+
+1. 它们的两个根结点具有相同的值。
+2. 每个树的右子树都与另一个树的左子树镜像对称。
+
+![Push an element in stack](https://leetcode-cn.com/media/original_images/101_Symmetric_Mirror.png)
+
+就像人站在镜子前审视自己那样。镜中的反射与现实中的人具有相同的头部，但反射的右臂对应于人的左臂，反之亦然。
+
+```c
+//递归
+bool isMirror(struct TreeNode *t1, struct TreeNode *t2) {
+    if (t1 == NULL && t2 == NULL)
+        return true;
+    if (t1 == NULL || t2 == NULL)
+        return false;
+    return (t1->val == t2->val) && isMirror(t1->right, t2->left) 
+        && isMirror(t1->left, t2->right);
+}
+
+bool isSymmetric(struct TreeNode* root) {
+    if (root == NULL) return true;
+    return isMirror(root->left, root->right);
+    
+}
+```
+
+- 时间复杂度：O(n)。因为我们遍历整个输入树一次，所以总的运行时间为 O(n)，其中 nn 是树中结点的总数。
+- 空间复杂度：递归调用的次数受树的高度限制。在最糟糕的情况下，树是线性的，其高度为 O(n)。因此，在最糟糕的情况下，由栈上的递归调用造成的空间复杂度为 O(n)。
+
+**？迭代：**
+
+```c
+//迭代、一层一层比较
+
+```
+
+#### 102、二叉树的层次遍历
+
+ 
+
