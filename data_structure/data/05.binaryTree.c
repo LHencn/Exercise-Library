@@ -35,6 +35,41 @@ Node *insert(Node *t, int val) {
     return t;
 }
 
+Node *predecessor(Node *node) {
+    Node *temp = node->lchild;
+    while (temp->rchild) temp = temp->rchild;
+    return temp;
+}
+
+Node *erase(Node *node, int key) {
+    if (node == NULL) return node;
+    if (key > node->data) {
+        node->rchild = erase(node->rchild, key);
+    } else if (key < node->data) {
+        node->lchild = erase(node->lchild, key);
+    } else {
+        if (node->lchild == NULL && node->rchild == NULL) {
+            free(node);
+            return NULL;
+        } else if (node->lchild == NULL || node->rchild == NULL) {
+            Node *temp = (node->lchild ? node->lchild : node->rchild);
+            free(node);
+            return temp;
+        } else {
+            Node *temp = predecessor(node);
+            node->data = temp->data;
+            node->lchild = erase(node->lchild, temp->data);
+        }
+    }
+    return node;
+}
+
+
+
+
+
+
+
 int search(Node *t, int val) {
     if (t == NULL) {
         return 0;
@@ -65,14 +100,14 @@ void output(Node *node) {
 
 int main() {
     srand(time(0));
-    Tree t = init(0);
+    Tree t = init(5);
     for (int i = 0; i < 10; i++) {
-        int op = rand() % 4;
+        int op = rand() % 5;
         switch (op) {
             case 0:
             case 1:
             case 2: {
-                int val = rand() % 100;
+                int val = rand() % 10;
                 insert(t, val);
                 printf("insert : %d\n", val);
                 output(t);
@@ -80,8 +115,16 @@ int main() {
                 break;
             }
             case 3: {
-                int val = rand() % 100;
+                int val = rand() % 10;
                 printf("search %d from t is %d\n", val, search(t, val));
+                output(t);
+                printf("\n");
+                break;
+            }
+            case 4: {
+                int val = rand() % 10;
+                printf("erase %d \n", val);
+                erase(t, val);
                 output(t);
                 printf("\n");
                 break;
