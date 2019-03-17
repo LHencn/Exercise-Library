@@ -10,11 +10,16 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-int a = 0;
 int main() {
+    int a = 5;
     auto inc = [&a](){a++;};
     inc();
     inc();
     cout << a << endl;
+    int x = 5, y = 6;
+    auto func2 = [x, y](int x, int y) {
+        cout << this->x << endl;
+    };
+
     return 0;
 }
