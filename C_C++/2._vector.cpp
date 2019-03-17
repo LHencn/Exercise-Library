@@ -8,16 +8,19 @@
 #include <iostream>
 #include <vector>
 
-using std::cin;
-using std::cout;
-using std::endl;
-using std::vector;
+using namespace std:
+
+namespace my {
+    template<typename T> 
+    class vector {
+
+    };
+    vector<int> func() {
+        vector<int> 
+    }
+};
 
 int main() {
-    vector<int> arr(14);
-    arr[0] = 1;
-    arr[2] = 2;
-    cout << arr.size() << endl;
 
 
     return 0;
