@@ -1,8 +1,8 @@
 /*************************************************************************
-	> File Name: 1.高斯日记.cpp
+	> File Name: 6.多久啦.cpp
 	> Author: LHC 
 	> Mail: 3115629644@qq.com 
-	> Created Time: 2019年03月19日 星期二 10时24分01秒
+	> Created Time: 2019年03月21日 星期四 10时02分23秒
  ************************************************************************/
 
 #include <iostream>
@@ -23,30 +23,29 @@ bool is_leap(int y) {
 }
 
 int get_next_day(int y, int m, int d) {
-    d += 1;
-    if (d > (month[m] + (m == 2 && is_leap(y))))
-        d = 1;
+    d++;
+    if (d > (month[m] + (m == 2 && is_leap(y)))) 
+        d= 1;
     return d;
 }
 
 int main() {
-    int y = 1777, m = 4, d = 30;
-    int days = 8113;
-    days--;
-    while (days--) {
+    int y = 1997, m = 11, d = 3, days = 0;
+    for (; y < 2019; days++) {
         d = get_next_day(y, m, d);
         m += (d == 1);
         y += ((m == 13) && (m = 1));
     }
-    cout << y << "-" << m << "-" << d << endl;
+    cout << "此时时间" << y << " " << m << " " << d << " " << days << endl;
+    m = 1;
+    for (; y <= 2019 && m <= 2; days++) {
+        d = get_next_day(y, m, d);
+        m += (d == 1);
+        y += ((m == 13) && (m = 1));
+    }
 
-    days = 7809, y = 1997, m = 11, d = 3;
-    days--;
-    while (days--) {
-        d = get_next_day(y, m, d);
-        m += (d == 1);
-        y += ((m == 13) && (m = 1));
-    }
-    cout << y << "-" << m << "-" << d << endl;
+    cout << "此时时间" << y << " " << m << " " << d << " " << days << endl;
+
+
     return 0;
 }
