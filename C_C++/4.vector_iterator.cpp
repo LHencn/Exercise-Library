@@ -37,7 +37,7 @@ namespace my {
             p++;
             return *this;
         }
-        vector_iterator<T> &oerator++(int x) { //后加加返回一个右值
+        vector_iterator<T> oerator++(int x) { //后加加返回一个右值
             vector_iterator<T> ret(*this);
             p++;
             return *ret;
@@ -47,7 +47,7 @@ namespace my {
     };
     class vector {
     public :
-        typedef vector_iterator<T> iterator;
+        typedef vector_iterator<T> iterator;//最有价值
         vector() {
             this->data = nullptr;
             this->size = 10;
