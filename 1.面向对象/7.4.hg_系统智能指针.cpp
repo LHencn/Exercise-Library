@@ -76,13 +76,20 @@ public :
     virtual ~B() {
         cout << "Class B" << endl;
     }
+    my::shared_ptr<B> next;
 };
 
 void func() {
+    my::shared_ptr<B> p1(new B);
+    my::shared_ptr<B> p2(new B);
+    p1->next = p2;
+    p2->next = p1;
+    /*
     my::shared_ptr<A> p(new B);
     B *temp_q = dynamic_cast<B *>(p.get());
     my::shared_ptr<B> q(temp_q);
     cout << p.use_count() << " " << q.use_count() << endl;
+    */
     return ;
 }
 
