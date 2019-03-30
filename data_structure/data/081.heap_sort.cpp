@@ -68,7 +68,7 @@ void heap_sort2(int *arr, int n) {
 }
 
 
-long getCurrentTime(){
+long long getCurrentTime(){
 	struct timeval tv;
 	gettimeofday(&tv, NULL);
 	return tv.tv_sec * 1000 + tv.tv_usec / 1000;
@@ -81,7 +81,6 @@ int verify(int a[]){
 	}
 	return 0;
 }
-ne
 
 void output(int *arr, int n) {
     for (int i = 0; i < n; i++) {
@@ -99,11 +98,11 @@ int main() {
         arr2[i] = arr[i];
     }
 
-    long time_3_1 = getCurrentTime();
+    long long time_3_1 = getCurrentTime();
     heap_sort1(arr, op);
-	long time_3_2 = getCurrentTime();
+	long long time_3_2 = getCurrentTime();
     heap_sort2(arr2, op);
-    long time_3_3 = getCurrentTime();
+    long long time_3_3 = getCurrentTime();
 	cout << time_3_2 - time_3_1 << "   " << time_3_3 - time_3_2 << endl;
 	int c1 = verify(arr);
     int c2 = verify(arr2);
