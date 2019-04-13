@@ -19,10 +19,8 @@ using namespace std;
 class SingleClass {
 public :
     int getX() { return x; }
-    static SingleClass *get() {
-        if (SingleClass::obj == nullptr) {
-            obj = new SingleClass();
-        }
+    static SingleClass &get() {
+        static SingleClass &obj = *(new SingleClass());
         return obj;
     }
 private :
