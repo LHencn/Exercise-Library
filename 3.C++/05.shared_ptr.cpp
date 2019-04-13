@@ -31,23 +31,28 @@ struct D {
 int main() {
     {
         std::cout << "constructor with no managed object\n";
-        std::shared_ptr<Foo> sh1;    
-        std::cout << "************************************\n";
+        std::shared_ptr<Foo> sh1;   //仅仅声明指针
     }
+    std::cout << "************************************\n";
     
     {
         std::cout << "constructor with object\n";
-        std::shared_ptr<Foo> sh2(new Foo);
-        std::shared_ptr<Foo> sh3(sh2);
+        std::shared_ptr<Foo> sh2(new Foo, D()); //智能指针指向一个Foo的对象
+        std::shared_ptr<Foo> sh3(sh2); //调用拷贝构造函数
         std::cout << sh2.use_count() << '\n';
         std::cout << sh3.use_count() << '\n';
-        std::cout << "************************************\n";
     }
-
+    std::cout << "************************************\n";
     
-
-
-
-
+    {
+        std::cout << "constructor with object and deleter\n";
+        std::shared_ptr<Foo> sh4(new Foo, D());
+        std::shared_ptr<Foo> sh5(new Foo, [](auto p) {
+            std::cout << "Call delte from lambda...\n";
+            delete p;
+        });
+    }
+    std::cout << "************************************\n";
+    
     return 0;
 }
