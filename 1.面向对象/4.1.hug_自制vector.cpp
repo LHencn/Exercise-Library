@@ -1,8 +1,8 @@
 /*************************************************************************
-	> File Name: 4.vector_iterator.cpp
-	> Author: LHC 
-	> Mail: 3115629644@qq.com 
-	> Created Time: 2019年03月19日 星期二 20时11分24秒
+	> File Name: vector.cpp
+	> Author: hug
+	> Mail:   hug@haizeix.com
+	> Created Time: 二  3/19 20:04:58 2019
  ************************************************************************/
 
 #include <iostream>
@@ -13,13 +13,12 @@
 #include <vector>
 #include <map>
 #include <cmath>
-#include <ctime>
 using namespace std;
 
 namespace my {
     template<typename T>
     class vector_iterator {
-    public :
+    public:
         vector_iterator() : p(nullptr) {}
         vector_iterator(T *p) : p(p) {}
         vector_iterator(const vector_iterator<T> &obj) : p(obj.p) {}
@@ -33,28 +32,31 @@ namespace my {
         T &operator*() {
             return *p;
         }
-        vector_iterator<T> &operator++() { //前加加返回一个左值
+        vector_iterator<T> &operator++() {
             p++;
             return *this;
         }
-        vector_iterator<T> operator++(int x) { //后加加返回一个右值
+        vector_iterator<T> operator++(int x) {
             vector_iterator<T> ret(*this);
             p++;
-            return *ret;
+            return ret;
         }
-    private :
+
+    private:
         T *p;
     };
-    template <typename T>
+    template<typename T>
     class vector {
     public :
-        typedef vector_iterator<T> iterator;//最有价值
+        typedef vector_iterator<T> iterator;
         vector() {
             this->data = nullptr;
-            this->size = 10;
+            this->__begin = nullptr;
+            this->__end = nullptr;
+            this->size = 0;
             this->length = 0;
         }
-        vector(const vector<T> &arr) : data(nullptr), size(0), length(0) {
+        vector(const vector<T> &arr) {
             clear();
             this->data = new T[arr.size];
             for (int i = 0; i < arr.length; i++) {
@@ -62,13 +64,19 @@ namespace my {
             }
             this->size = arr.size;
             this->length = arr.length;
+            this->__begin = new iterator(this->data);
+            this->__end = new iterator(this->data + this->length);
         }
         vector(vector<T> &&arr) : 
             data(arr.data), 
-            size(arr.size),
-            length(arr.length) 
+            size(arr.size), 
+            length(arr.length),
+            __begin(arr.__begin),
+            __end(arr.__end)
         {
             arr.data = nullptr;
+            arr.__begin = nullptr;
+            arr.__end = nullptr;
             arr.size = 0;
             arr.length = 0;
         }
@@ -79,48 +87,51 @@ namespace my {
             int new_size = size * 2 + 1;
             int raw_length = length;
             T *p_arr = new T[new_size];
-            for (int i = 0; i < this->length; i++) {
+            for (int i = 0; i < length; i++) {
                 new(p_arr + i) T(std::move(data[i]));
             }
             clear();
             data = p_arr;
             size = new_size;
             length = raw_length;
+            __begin = new iterator(data);
+            __end = new iterator(data + length);
             return ;
         }
-        iterator &&begin() {
+        iterator begin() {
             return iterator(this->data);
         }
-        iterator &&end() {
+        iterator end() {
             return iterator(this->data + this->length);
         }
         void push_back(const T &obj) {
             if (this->length >= this->size) {
                 this->expand();
             }
-            new(this->data + this->length++) T(obj);
+            new(this->data + this->length) T(obj);
             this->length += 1;
+            ++(*(this->__end));
             return ;
-        } 
+        }
         void clear() {
             if (this->data != nullptr) {
                 delete[] this->data;
+                delete this->__begin;
+                delete this->__end;
             }
-            this->data = nullptr;
+            this->data = nullptr;;
+            this->__begin = nullptr;
+            this->__end = nullptr;
             this->size = 0;
             this->length = 0;
-
         }
         ~vector() {
-            if (this->data != nullptr)
-                delete[] this->data;
-            this->data = nullptr;
-            this->size = 0;
-            this->length = 0;
+            clear();
         }
-    private :
+    private:
         T *data;
         size_t size, length;
+        iterator *__begin, *__end;
     };
 
     void test() {
@@ -135,10 +146,7 @@ namespace my {
     }
 }
 
-
 int main() {
-    
-
-
+    my::test();
     return 0;
 }
