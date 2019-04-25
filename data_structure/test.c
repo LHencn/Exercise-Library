@@ -1,13 +1,12 @@
 /*************************************************************************
-	> File Name: binary_search_tree.c
+	> File Name: test.c
 	> Author: LHC 
 	> Mail: 3115629644@qq.com 
-	> Created Time: 2019年01月20日 星期日 18时54分40秒
+	> Created Time: 2019年04月25日 星期四 14时16分30秒
  ************************************************************************/
 
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 typedef struct Node {
     int key;
@@ -24,7 +23,8 @@ Node *insert(Node *root, int key) {
     if (root == NULL) return getNewNode(key);
     if (root->key == key) return root;
     if (root->key > key) root->lchild = insert(root->lchild, key);
-    else root->rchild = insert(root->rchild, key);
+    else 
+        root->rchild = insert(root->rchild, key);
     return root;
 }
 
@@ -60,7 +60,7 @@ Node *erase(Node *root, int key) {
 int search(Node *root, int key) {
     if (root == NULL) return 0;
     if (root->key == key) return 1;
-    return (root->key > key ? search(root->lchild, key) : search(root->rchild, key));
+    return (root->key > key ? search(root->rchild, key) : search(root->lchild, key));
 }
 
 void clear(Node *node) {
@@ -78,34 +78,8 @@ void output(Node *root) {
     output(root->rchild);
     return ;
 }
+
 int main() {
-    srand(time(0));
-    int op, val;
-    #define MAX_OP 20 
-    #define MAX_N 15
-    Node *root = NULL;
-    for (int i = 0; i < MAX_OP; i++) {
-        op = rand() % 6;
-        val = rand() % MAX_N;
-        switch(op) { // 0 search, 1 erase, 2, 3, 4, 5insert
-            case 0: {
-                printf("search %d = %d\n", val, search(root, val));
-                break;
-            }
-            case 1: {
-                printf("erase %d from BST\n", val);
-                root = erase(root, val);
-                break;
-            }
-            default : {
-                printf("insert %d to BST\n", val);
-                root = insert(root, val);
-                break;
-            }
-        }
-    output(root);
-    printf("\n");
-    }
-    clear(root);
+
     return 0;
 }

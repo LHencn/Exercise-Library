@@ -16,59 +16,49 @@
 #include <ctime>
 using namespace std;
 
-int main() {
-    {
-        vector<int> a(10);
-        vector<int> b(10, 0);
-        vector<int> c = {1, 2, 3, 4, 5};
-        int x = c[2];
-        c[3] = x;
-    }
-
-    {
-        int a[] = {1, 2, 3, 4, 5};
-        int sum = 0;
-        for (int i = 0; i < sizeof(a) / sizeof(*a); i++) {
-            sum += a[i];
+namespace my {
+    template <typename T>
+    class vector {
+    public:
+        vector() {
+            this->data = new T[10];
+            this->size = 10;
         }
-        cout << sum << endl;
-    }
-
-    {
-        int a[] = {1, 2, 3, 4, 5};
-        int sum = 0;
-        for (auto x : a) {
-            sum += x;
-        }
-        cout << sum << endl;
-    }
-    
-    {
-        int a[] = {1, 2, 3, 4, 5};
-        int b[] = {3, 4, 5, 6, 7};
-        int *it = nullptr;
-        for (int i = 0; i < sizeof(a) / sizeof(*a); i++) {
-            for (int j = 0; j < sizeof(b) / sizeof(*b); j++) {
-                if (a[i] == b[j]) {
-                    it = &a[i];
-                    break;
-                }
+        vector(const vector<T> &arr) : data(nullptr), size(0) {
+            if (this->data) {
+                delete[] this->data;
+            } 
+            this->size = arr.size;
+            for (int i = 0; i < this->size; i++) {
+                new (this->data + i) T(arr.data + i);
             }
         }
-        bool found = (it != nullptr);
-        cout << "found = " << found << " *it = " << *it << endl;
-    }
+        T &operator[](int ind) { 
+            //为什么要返回引用,因为需要更改其中的值
+            return this->data[ind];
+        }
 
-    {
-        vector<int> a = {1, 2, 3, 4, 5};
-        vector<int> b = {3, 4, 5, 6, 7};
-        auto it = find_first_of(begin(a), end(a), begin(b), end(b));
-        bool found = (it != end(a));
-        cout << "found = " << found << " *it = " << *it << endl;
-    }
+
+
+    private:
+        T *data;
+        int size;
+    };
+
+}
+
+
+int main() {
     
-    {
-        
-    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     return 0;
 }
